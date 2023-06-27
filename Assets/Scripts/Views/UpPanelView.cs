@@ -47,8 +47,6 @@ namespace Views
 
         public void OnEnemyDeath(Enemy enemy)
         {
-            _rhythmViewComponent.OnEnemyDeath();
-
             _enemy.OnDamage -= OnDamageHandler;
             _enemy.OnDeath -= OnDeathHandler;
             _enemy = null;
