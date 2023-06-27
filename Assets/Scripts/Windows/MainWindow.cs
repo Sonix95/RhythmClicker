@@ -19,6 +19,8 @@ namespace Windows
 
         private void Awake()
         {
+            Application.targetFrameRate = 30;
+
             _enemyConfig = Resources.Load<EnemyConfig>("Configs/EnemiesConfig");
             _damageElement = Resources.Load<GameObject>("Prefabs/UI/DamageElement");
 

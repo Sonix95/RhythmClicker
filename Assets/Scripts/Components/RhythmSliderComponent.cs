@@ -13,18 +13,29 @@ namespace Components
         [SerializeField] private Slider _sliderLeft = default;
         [SerializeField] private Slider _sliderRight = default;
 
-        private float _sliderSpeed = 0f;
-        private float _sliderValue = 0f;
-        private bool _blocking = true;
         private Coroutine _coroutine;
+
+        private float _sliderSpeed = default;
+        private float _sliderValue = default;
+
+        private float _bitOnCenterDelay = default;
+        private float _bitDestroyDelay = default;
+
+        private bool _blocking = true;
+
         public float SliderValue => _sliderValue;
 
-        public void Init(float speed)
+        public void Init(float speed, float bitOnCenterDelay, float bitDestroyDelay)
         {
+            name = $"Bit_Element_No{Random.Range(0, 99999)}";
+
             _sliderSpeed = speed;
+
+            _bitOnCenterDelay = bitOnCenterDelay;
+            _bitDestroyDelay = bitDestroyDelay;
+
             _sliderValue = 0f;
             _blocking = false;
-            name = $"{Random.Range(0, 99999)}";
         }
 
         public void OnClick()
@@ -34,17 +45,23 @@ namespace Components
             {
                 StopCoroutine(_coroutine);
             }
+
             Destroy(gameObject);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (_blocking)
             {
                 return;
             }
 
-            _sliderValue += Time.deltaTime * _sliderSpeed;
+            _sliderValue += _sliderSpeed;
+
+            if (_sliderValue > 50)
+            {
+                _sliderValue = 50.01f;
+            }
 
             _sliderLeft.value = _sliderValue;
             _sliderRight.value = _sliderValue;
@@ -52,16 +69,27 @@ namespace Components
             if (_sliderValue >= 50)
             {
                 _blocking = true;
-                OnMoveCenter?.Invoke(this);
                 _coroutine = StartCoroutine(DestroyElement());
             }
         }
 
         private IEnumerator DestroyElement()
         {
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(_bitOnCenterDelay);
+
+            OnMoveCenter?.Invoke(this);
+
             _coroutine = null;
-            Destroy(gameObject);
+
+            if (_bitDestroyDelay <= 0)
+            {
+                yield return null;
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject, _bitDestroyDelay);
+            }
         }
     }
 }
