@@ -19,20 +19,18 @@ namespace Components
         private float _sliderValue = default;
 
         private float _bitOnCenterDelay = default;
-        private float _bitDestroyDelay = default;
 
         private bool _blocking = true;
 
         public float SliderValue => _sliderValue;
 
-        public void Init(float speed, float bitOnCenterDelay, float bitDestroyDelay)
+        public void Init(float speed, float bitOnCenterDelay)
         {
             name = $"Bit_Element_No{Random.Range(0, 99999)}";
 
             _sliderSpeed = speed;
 
             _bitOnCenterDelay = bitOnCenterDelay;
-            _bitDestroyDelay = bitDestroyDelay;
 
             _sliderValue = 0f;
             _blocking = false;
@@ -49,14 +47,14 @@ namespace Components
             Destroy(gameObject);
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (_blocking)
             {
                 return;
             }
 
-            _sliderValue += _sliderSpeed;
+            _sliderValue += _sliderSpeed * Time.deltaTime;
 
             if (_sliderValue > 50)
             {
@@ -81,15 +79,8 @@ namespace Components
 
             _coroutine = null;
 
-            if (_bitDestroyDelay <= 0)
-            {
-                yield return null;
-                Destroy(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject, _bitDestroyDelay);
-            }
+            yield return null;
+            Destroy(gameObject);
         }
     }
 }
