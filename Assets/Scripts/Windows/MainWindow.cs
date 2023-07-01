@@ -25,10 +25,16 @@ namespace Windows
             var enemyModel = CreateEnemy(0);
 
             _enemyPanel.OnClicked += OnClickHandler;
+            _bottomPanel.OnExitButtonClicked += OnExitButtonClickHandler;
 
             _upPanel.Init(_currentEnemy);
             _enemyPanel.Init(enemyModel.PathToResource);
             _bottomPanel.Init(enemyModel.Name);
+        }
+
+        private void OnExitButtonClickHandler()
+        {
+            _upPanel.ExitToMainMenu();
         }
 
         private void OnClickHandler()

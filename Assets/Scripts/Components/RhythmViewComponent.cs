@@ -31,6 +31,7 @@ namespace Components
         [SerializeField] private RectTransform _rhythmAreasRoot = default;
         [SerializeField] private RectTransform _sliderRoot = default;
         [SerializeField] private float _maxBitsOnScreen = default;
+        [SerializeField] private ToggleGroup _musicToggles = default;
 
         private RhythmElementsConfig _rhythmsConfig = default;
         private SongsConfig _songsConfig = default;
@@ -73,27 +74,42 @@ namespace Components
             CreateRhythmAreas();
         }
 
+        public void StopSong()
+        {
+            if (_audioSource.isPlaying)
+            {
+                _audioSource.Stop();
+            }
+
+            //ClearSongInfo();
+            //_isStarted = false;
+            //_isPlayingSound = false;
+            //_currentSpawnIndex = 0;
+            //_currentLevelTime = 0;
+            //_buttonRoot.SetActive(true);
+        }
+
         private void ClickButtonHandler2()
         {
             _maxBitsOnScreen = 2;
-            StartSong();
+            StartSong(_musicToggles.GetFirstActiveToggle().name);
         }
         private void ClickButtonHandler4()
         {
             _maxBitsOnScreen = 4;
-            StartSong();
+            StartSong(_musicToggles.GetFirstActiveToggle().name);
         }
         private void ClickButtonHandlerAll()
         {
             _maxBitsOnScreen = 9999;
-            StartSong();
+            StartSong(_musicToggles.GetFirstActiveToggle().name);
         }
 
-        private void StartSong()
+        private void StartSong(string songName)
         {
             _buttonRoot.SetActive(false);
 
-            SetSongInfo("Drumnbass");
+            SetSongInfo(songName);
 
             _isStarted = _currentSongModel != null;
         }

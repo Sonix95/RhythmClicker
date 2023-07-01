@@ -27,6 +27,11 @@ namespace Views
             InitEnemy();
         }
 
+        public void ExitToMainMenu()
+        {
+            _rhythmViewComponent.StopSong();
+        }
+
         private void InitEnemy()
         {
             _healthBar.minValue = 0;
